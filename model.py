@@ -4,6 +4,18 @@ import torch
 from utils import SegmentDataset, visualize_masks
 
 
+MODELS = {
+    "Unet": smp.Unet,
+}
+CRITERIONS = {
+    "Dice": smp.losses.DiceLoss(smp.losses.BINARY_MODE, from_logits=True),
+    "SoftBCE": smp.losses.SoftBCEWithLogitsLoss,
+}
+OPTIMIZERS = {
+    "Adam": torch.optim.Adam,
+}
+
+
 class SegmentModule(pl.LightningModule):
     def __init__(self, config):
         super().__init__()
@@ -93,7 +105,7 @@ class SegmentModule(pl.LightningModule):
 
     def configure_optimizers(self):
         params = self._config["optimizer_params"]
-        optimizer = OPTIMIZERS[config["optimizer_type"]](
+        optimizer = OPTIMIZERS[self._config["optimizer_type"]](
             self.model.parameters(), **params
         )
         return optimizer
