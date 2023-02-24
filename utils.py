@@ -4,6 +4,7 @@ import torch
 from PIL import Image
 import numpy as np
 import albumentations as albu
+import matplotlib.pyplot as plt
 
 
 class SegmentDataset(torch.utils.data.Dataset):
@@ -62,3 +63,11 @@ class SegmentDataset(torch.utils.data.Dataset):
 
     def __len__(self):
         return len(self._images_files)
+
+
+def visualize_masks(predicted_mask, true_mask, image):
+    fig, ax = plt.subplots(1, 3, figsize=(15, 45))
+    ax[0].imshow(true_mask)
+    ax[1].imshow(predicted_mask)
+    ax[2].imshow(image.permute(1, 2, 0))
+    plt.show()
